@@ -1,5 +1,6 @@
 import { firebase, FieldValue } from "../lib/firebase";
 
+/* returns a true */
 export async function doesUsernameExist(username) {
   const result = await firebase
     .firestore()

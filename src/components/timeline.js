@@ -7,9 +7,8 @@ import Post from "./post";
 export default function Timeline() {
   const { user } = useContext(LoggedInUserContext);
   const { photos } = usePhotos(user);
-  // console.log(`photos`, photos);
   return (
-    <div className="container col-span-2">
+    <div className="col-span-3 lg:col-span-2">
       {!photos ? (
         <Skeleton count={4} width={640} height={500} className="mb-5" />
       ) : (

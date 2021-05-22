@@ -16,23 +16,23 @@ export default function SignUp() {
   const [error, setError] = useState("");
   const isInvalid = password === "" || emailAddress === "";
 
+  /* first check is username exists, if not then sign up by creating user in auth as well as in firestore users collection, if anything goes wrong empty the form and set the error */
   const handleSignUp = async (event) => {
     event.preventDefault();
 
+    //returns [false] if username exists, returns [] if username doesnt exist
     const usernameExists = await doesUsernameExist(username);
+
     if (!usernameExists.length) {
       try {
         const createdUserResult = await firebase
           .auth()
           .createUserWithEmailAndPassword(emailAddress, password);
 
-        // authentication
-        // -> emailAddress & password & username (displayName)
         await createdUserResult.user.updateProfile({
           displayName: username,
         });
 
-        // firebase user collection (create a document)
         await firebase.firestore().collection("users").add({
           userId: createdUserResult.user.uid,
           username: username.toLowerCase(),
@@ -57,30 +57,35 @@ export default function SignUp() {
   };
 
   useEffect(() => {
-    document.title = "Sign Up - Instagram";
+    document.title = "Sign Up - Margatsni";
   }, []);
 
   return (
-    <div className="container flex mx-auto max-w-screen-md items-center h-screen">
-      <div className="flex w-3/5">
+    <div className="container flex mx-auto max-w-screen-md items-center h-screen px-4 lg:px-0">
+      <div className="hidden lg:flex w-full lg:w-3/5">
         <img
           src="/images/iphone-with-profile.jpg"
           alt="iPhone with Instagram app"
+          className="object-scale-down"
         />
       </div>
-      <div className="flex flex-col w-2/5">
+      <div className="flex flex-col w-full justify-center h-full max-w-md m-auto lg:w-2/5">
         <div className="flex flex-col items-center bg-white p-4 border border-gray-primary mb-4 rounded">
           <h1 className="flex justify-center w-full">
             <img
               src="/images/logo.png"
-              alt="Instagram"
+              alt="Margatsni"
               className="mt-2 w-6/12 mb-4"
             />
           </h1>
 
-          {error && <p className="mb-4 text-xs text-red-primary">{error}</p>}
+          {error && (
+            <p className="mb-4 text-xs text-red-primary" data-testid="error">
+              {error}
+            </p>
+          )}
 
-          <form onSubmit={handleSignUp} method="POST">
+          <form onSubmit={handleSignUp} method="POST" data-testid="sign-up">
             <input
               aria-label="Enter your username"
               type="text"
@@ -100,7 +105,7 @@ export default function SignUp() {
             <input
               aria-label="Enter your email address"
               type="text"
-              placeholder="Email address"
+              placeholder="Email Address"
               className="text-sm text-gray-base w-full mr-3 py-5 px-4 h-2 border border-gray-primary rounded mb-2"
               onChange={({ target }) => setEmailAddress(target.value)}
               value={emailAddress}
@@ -126,7 +131,11 @@ export default function SignUp() {
         <div className="flex justify-center items-center flex-col w-full bg-white p-4 rounded border border-gray-primary">
           <p className="text-sm">
             Have an account?{` `}
-            <Link to={ROUTES.LOGIN} className="font-bold text-blue-medium">
+            <Link
+              to={ROUTES.LOGIN}
+              className="font-bold text-blue-medium"
+              data-testid="login"
+            >
               Login
             </Link>
           </p>

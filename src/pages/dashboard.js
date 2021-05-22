@@ -10,14 +10,14 @@ export default function Dashboard() {
   const logUser = useContext(UserContext);
   const { user } = useUser(logUser.uid);
   useEffect(() => {
-    document.title = "Instagram";
+    document.title = "Margatsni";
   }, []);
 
   return (
     <LoggedInUserContext.Provider value={{ user }}>
       <div className="bg-gray-background">
         <Header />
-        <div className="grid grid-cols-3 gap-4 justify-between mx-auto max-w-screen-lg">
+        <div className="grid grid-cols-3 gap-4 justify-between mx-auto max-w-screen-lg px-4 lg:px-0">
           <Timeline />
           <Sidebar />
         </div>
